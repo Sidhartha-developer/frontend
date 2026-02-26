@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer         from "./authSlice";
-import requestReducer      from "./requestSlice";
+import requestReducer      from "./requestSlice.js";
 import categoryReducer     from "./categorySlice";
 import notificationReducer from "./notificationSlice";
 

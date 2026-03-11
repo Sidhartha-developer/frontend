@@ -8,49 +8,49 @@ function HowItWorksPage() {
 
   return (
     <div className="w-full overflow-hidden">
-        {/* Navbar */}
-  <Navbar />
 
-      {/* HERO */}
-<section className="relative h-[65vh] flex items-center justify-center overflow-hidden">
+      <Navbar />
 
-  {/* gradient base */}
-  <div className="absolute inset-0 bg-gradient-to-br from-green-50 via-white to-green-100"></div>
+{/* HERO */}
+<section className="relative bg-gradient-to-b from-[#1f5f3b] to-[#0f2f1f] py-40 text-center overflow-hidden">
 
-  {/* illustration background */}
-  <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
-    <img
-      src="/assets/steps.png"   // your generated image
-      alt="workflow illustration"
-      className="w-[1000px] max-w-[90%] object-contain"
-    />
+  {/* soft glow background */}
+  <div className="absolute inset-0 pointer-events-none">
+    <div className="absolute left-1/4 top-10 w-[500px] h-[500px] bg-green-400/10 blur-3xl rounded-full"></div>
+    <div className="absolute right-1/4 bottom-10 w-[400px] h-[400px] bg-green-500/10 blur-3xl rounded-full"></div>
   </div>
 
-  {/* content */}
   <motion.div
-    className="relative text-center space-y-4 mt-20 px-6 max-w-2xl"
+    className="relative max-w-3xl mx-auto px-6 space-y-6"
     initial={{ opacity: 0, y: 40 }}
     animate={{ opacity: 1, y: 0 }}
   >
-    <span className="text-green-600 font-semibold uppercase tracking-wide text-sm">
+
+    {/* label */}
+    <span className="inline-block text-xs uppercase tracking-widest font-semibold text-green-200 border border-green-400/30 px-4 py-1 rounded-full">
       Process
     </span>
 
-    <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
-      How Scrap Collection Works
+    {/* heading */}
+    <h1 className="font-heading text-5xl md:text-6xl lg:text-7xl font-bold text-white">
+      How Scrap <span className="text-[#E5C447]">Collection</span> Works
     </h1>
 
-    <p className="text-gray-600 max-w-xl mx-auto">
+    {/* description */}
+    <p className="text-green-100 text-lg max-w-xl mx-auto">
       A transparent digital workflow connecting households, vendors, and
       administrators to ensure efficient scrap pickup and recycling.
     </p>
+
   </motion.div>
 
 </section>
 
+
       {/* STEPS */}
       <section className="py-28 bg-white">
-        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-10 text-center">
+
+        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-12 text-center">
 
           {[
             [
@@ -74,6 +74,7 @@ function HowItWorksPage() {
               "Vendor accepts the request, collects scrap, and updates job status for transparent tracking.",
             ],
           ].map((step, i) => (
+
             <motion.div
               key={i}
               className="space-y-4"
@@ -82,20 +83,32 @@ function HowItWorksPage() {
               viewport={{ once: true }}
               whileHover={{ y: -8 }}
             >
-              <div className="w-14 h-14 rounded-full bg-green-500 text-white flex items-center justify-center text-xl font-bold mx-auto shadow-sm">
+
+              <div className="w-16 h-16 rounded-full bg-primary text-white flex items-center justify-center text-xl font-bold mx-auto shadow-md">
                 {step[0]}
               </div>
 
-              <h3 className="font-semibold">{step[1]}</h3>
-              <p className="text-gray-500">{step[2]}</p>
+              <h3 className="font-heading text-3xl text-gray-800">
+                {step[1]}
+              </h3>
+
+              <p className="text-gray-500 text-sm">
+                {step[2]}
+              </p>
+
             </motion.div>
+
           ))}
+
         </div>
+
       </section>
 
+
       {/* USER VS VENDOR */}
-      <section className="py-28 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-10">
+      <section className="py-28 bg-green-50">
+
+        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12">
 
           {[
             {
@@ -115,26 +128,42 @@ function HowItWorksPage() {
               ],
             },
           ].map((item, i) => (
+
             <motion.div
               key={i}
-              className="bg-white p-8 rounded-xl border border-gray-100 shadow-sm space-y-4"
+              className="bg-white p-10 rounded-xl shadow-sm space-y-5"
               whileHover={{ y: -8 }}
               initial={{ opacity: 0, x: i === 0 ? -50 : 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
             >
-              <h3 className="text-2xl font-bold">{item.title}</h3>
+
+              <h3 className="font-heading text-4xl text-primary">
+                {item.title}
+              </h3>
 
               {item.points.map((p, j) => (
-                <div key={j} className="flex gap-3">
-                  <span className="text-green-500">✔</span>
-                  <p>{p}</p>
+
+                <div key={j} className="flex gap-3 items-start">
+
+                  <span className="text-primary font-bold">✔</span>
+
+                  <p className="text-gray-600 text-sm">
+                    {p}
+                  </p>
+
                 </div>
+
               ))}
+
             </motion.div>
+
           ))}
+
         </div>
+
       </section>
+
 
       {/* PLATFORM VALUE */}
       <motion.section
@@ -143,9 +172,13 @@ function HowItWorksPage() {
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
       >
-        <div className="max-w-3xl mx-auto px-6 space-y-4">
-          <h2 className="text-4xl font-bold">
-            A Unified Scrap Management Ecosystem
+
+        <div className="max-w-3xl mx-auto px-6 space-y-5">
+
+          <h2 className="font-heading text-6xl text-primary">
+            A Unified Scrap
+            <br />
+            Management Ecosystem
           </h2>
 
           <p className="text-gray-500">
@@ -153,33 +186,43 @@ function HowItWorksPage() {
             oversight into a single digital ecosystem — ensuring transparency,
             efficiency, and scalable recycling impact.
           </p>
+
         </div>
+
       </motion.section>
+
 
       {/* CTA */}
       <motion.section
-        className="py-28 bg-gray-50 text-center"
+        className="py-28 bg-green-50 text-center"
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
       >
+
         <div className="space-y-6 px-6">
-          <h2 className="text-4xl font-bold">
-            Start Your First Scrap Request
+
+          <h2 className="font-heading text-6xl text-primary">
+            Start Your First
+            <br />
+            Scrap Request
           </h2>
 
           <motion.button
             onClick={() => navigate("/register")}
-            className="bg-green-500 text-white px-8 py-3 rounded-md font-semibold shadow-sm hover:bg-green-600"
+            className="bg-[#F4B400] text-gray-900 px-10 py-4 rounded-md font-semibold shadow-md hover:bg-yellow-500 transition"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             Create Account →
           </motion.button>
+
         </div>
+
       </motion.section>
 
       <Footer />
+
     </div>
   );
 }

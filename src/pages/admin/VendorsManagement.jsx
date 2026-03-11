@@ -77,6 +77,8 @@ const VendorsManagement = () => {
                   <th className="px-5 py-3 font-medium">Name</th>
                   <th className="px-5 py-3 font-medium">Email</th>
                   <th className="px-5 py-3 font-medium">Phone</th>
+                  <th className="px-5 py-3 font-medium">Plan</th>
+                  <th className="px-5 py-3 font-medium">Payment</th>
                   <th className="px-5 py-3 font-medium">Joined</th>
                   <th className="px-5 py-3 font-medium">Approval</th>
                   <th className="px-5 py-3 font-medium">Status</th>
@@ -90,6 +92,25 @@ const VendorsManagement = () => {
                     <td className="px-5 py-3 font-medium text-gray-800">{v.name}</td>
                     <td className="px-5 py-3 text-gray-500">{v.email}</td>
                     <td className="px-5 py-3 text-gray-500">{v.phone}</td>
+                    <td className="px-5 py-3 text-gray-500">
+                      {v.currentPlan ? (
+                        <div>
+                          <p className="font-medium text-gray-700">{v.currentPlan.name}</p>
+                          <p className="text-xs text-gray-400">Rs. {v.currentPlan.price} / {v.currentPlan.durationInDays} days</p>
+                        </div>
+                      ) : (
+                        <span className="text-gray-300">—</span>
+                      )}
+                    </td>
+                    <td className="px-5 py-3">
+                      <span className={`text-xs font-medium px-2 py-1 rounded-full capitalize ${
+                        v.paymentStatus === "paid" ? "bg-green-100 text-green-700"
+                        : v.paymentStatus === "failed" ? "bg-red-100 text-red-700"
+                        : "bg-yellow-100 text-yellow-700"
+                      }`}>
+                        {v.paymentStatus}
+                      </span>
+                    </td>
                     <td className="px-5 py-3 text-gray-400">{fmt(v.createdAt)}</td>
                     <td className="px-5 py-3">
                       <span className={`text-xs font-medium px-2 py-1 rounded-full capitalize ${

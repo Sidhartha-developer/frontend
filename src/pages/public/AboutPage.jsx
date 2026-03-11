@@ -35,7 +35,6 @@ function CountUp({ target, suffix = "" }) {
     );
 
     if (ref.current) observer.observe(ref.current);
-
     return () => observer.disconnect();
   }, [target]);
 
@@ -52,169 +51,251 @@ function AboutPage() {
 
   return (
     <div className="w-full overflow-hidden">
-        {/* Navbar */}
-  <Navbar />
 
-      {/* HERO */}
-<section className="relative h-[65vh] flex items-center justify-center overflow-hidden">
+      <Navbar />
 
-  {/* gradient base */}
-  <div className="absolute inset-0 bg-gradient-to-br from-green-50 via-white to-green-100"></div>
+{/* HERO */}
+<section className="relative bg-gradient-to-b from-[#1f5f3b] to-[#0f2f1f] py-40 flex items-center justify-center text-center overflow-hidden">
 
-  {/* illustration background */}
-  <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
-    <img
-      src="/assets/about.png"   // ← your generated image
-      alt="about background"
-      className="w-[900px] max-w-full object-contain"
-    />
+  {/* soft glow background */}
+  <div className="absolute inset-0 pointer-events-none">
+    <div className="absolute left-1/4 top-10 w-[500px] h-[500px] bg-green-400/10 blur-3xl rounded-full"></div>
+    <div className="absolute right-1/4 bottom-10 w-[400px] h-[400px] bg-green-500/10 blur-3xl rounded-full"></div>
   </div>
 
   {/* Content */}
   <motion.div
-    className="relative text-center space-y-4 mt-20 px-6 max-w-2xl"
+    className="relative max-w-3xl mx-auto px-6 space-y-6"
     initial={{ opacity: 0, y: 40 }}
     animate={{ opacity: 1, y: 0 }}
   >
-    <span className="text-green-600 font-semibold uppercase tracking-wide text-sm">
+
+    {/* label */}
+    <span className="inline-block text-xs uppercase tracking-widest font-semibold text-green-200 border border-green-400/30 px-4 py-1 rounded-full">
       About Us
     </span>
 
-    <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
-      Building a Smarter Scrap Ecosystem
+    {/* heading */}
+    <h1 className="font-heading text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight">
+      Building a <span className="text-[#E5C447]">Smarter</span>
+      <br />
+      Scrap Ecosystem
     </h1>
 
-    <p className="text-gray-600">
+    {/* description */}
+    <p className="text-green-100 text-lg max-w-xl mx-auto">
       Empowering households and vendors through technology-driven scrap
       collection and sustainable recycling workflows.
     </p>
+
   </motion.div>
 
 </section>
 
+
       {/* INTRO */}
-      <motion.section
-        className="py-28 bg-white"
-        initial={{ opacity: 0, y: 60 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-      >
-        <div className="max-w-4xl mx-auto px-6 text-center space-y-6">
-          <h2 className="text-4xl font-bold">
-            Connecting Communities Through Responsible Recycling
-          </h2>
+<motion.section
+  className="py-32 bg-gradient-to-b from-[#eef7f1] to-white"
+  initial={{ opacity: 0, y: 60 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true }}
+>
 
-          <p className="text-gray-500 leading-relaxed">
-            Our platform bridges the gap between households seeking convenient
-            scrap disposal and vendors looking for consistent opportunities.
-            Through digital coordination, transparent pricing, and verified
-            partnerships, we transform everyday waste management into a
-            seamless, sustainable experience.
-          </p>
-        </div>
-      </motion.section>
+  <div className="max-w-3xl mx-auto text-center mb-16 px-6 space-y-4">
 
-      {/* MISSION VISION */}
-      <section className="py-28 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-8">
+    <span className="inline-block text-xs uppercase tracking-widest font-semibold text-green-700 border border-green-300 px-4 py-1 rounded-full">
+      Our Platform
+    </span>
 
-          {[
-            {
-              title: "Our Mission",
-              text: "Deliver convenient scrap collection while enabling responsible recycling practices across communities.",
-              icon: "🎯",
-            },
-            {
-              title: "Our Vision",
-              text: "Build the most trusted digital ecosystem for scrap management and circular economy growth.",
-              icon: "🌍",
-            },
-            {
-              title: "Our Values",
-              text: "Transparency, sustainability, operational excellence, and community empowerment.",
-              icon: "⭐",
-            },
-          ].map((item, i) => (
-            <motion.div
-              key={i}
-              className="bg-white p-8 rounded-xl border border-gray-100 shadow-sm text-center space-y-4 hover:shadow-md transition"
-              whileHover={{ y: -8 }}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <div className="w-14 h-14 mx-auto rounded-full bg-green-100 flex items-center justify-center text-2xl">
-                {item.icon}
-              </div>
+    <h2 className="font-heading text-5xl md:text-6xl text-gray-800">
+      Connecting Communities
+      <br />
+      Through <span className="text-[#E5C447]">Responsible Recycling</span>
+    </h2>
 
-              <h3 className="text-xl font-semibold">{item.title}</h3>
-              <p className="text-gray-500">{item.text}</p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
+    <p className="text-gray-600 text-lg">
+      Our platform bridges the gap between households seeking convenient
+      scrap disposal and vendors looking for consistent opportunities.
+    </p>
 
-      {/* STATS */}
-      <motion.section
-        className="py-28 bg-white"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-      >
-        <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-4 gap-6">
+  </div>
 
-          {[
-            ["12K+", "Pickups Completed"],
-            ["850+", "Verified Vendors"],
-            ["95T", "Scrap Recycled"],
-            ["25+", "Cities Served"],
-          ].map((s, i) => (
-            <motion.div
-              key={i}
-              className="bg-gray-50 p-8 rounded-xl border border-gray-100 text-center hover:shadow-md transition"
-              whileHover={{ y: -6 }}
-            >
-              <h3 className="text-4xl font-bold text-green-600">
-  {i === 0 && <CountUp target={12000} suffix="+" />}
-  {i === 1 && <CountUp target={850} suffix="+" />}
-  {i === 2 && <CountUp target={95} suffix="T" />}
-  {i === 3 && <CountUp target={25} suffix="+" />}
-</h3>
-              <p className="text-gray-600 mt-2">{s[1]}</p>
-            </motion.div>
-          ))}
-        </div>
-      </motion.section>
+</motion.section>
 
-      {/* CTA */}
-      <motion.section
-        className="py-28 bg-gray-50 text-center"
+
+      {/* MISSION / VISION */}
+<section className="relative py-32 bg-[#f3faf5] overflow-hidden">
+
+  <div className="absolute right-0 top-0 w-[400px] h-[400px] bg-green-200/40 blur-3xl rounded-full"></div>
+
+  <div className="max-w-3xl mx-auto text-center mb-16 px-6 space-y-4">
+
+  <span className="inline-block text-xs uppercase tracking-widest font-semibold text-green-700 border border-green-300 px-4 py-1 rounded-full">
+    Our Principles
+  </span>
+
+  <h2 className="font-heading text-5xl md:text-6xl text-gray-800">
+    The Values That
+    <span className="text-[#E5C447]"> Drive Us</span>
+  </h2>
+
+  <p className="text-gray-600 text-lg">
+    Our mission, vision, and core values guide every decision we make
+    in building a sustainable recycling ecosystem.
+  </p>
+
+</div>
+
+  <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-10">
+
+    {[
+      {
+        title: "Our Mission",
+        text: "Deliver convenient scrap collection while enabling responsible recycling practices across communities.",
+        icon: "🎯",
+      },
+      {
+        title: "Our Vision",
+        text: "Build the most trusted digital ecosystem for scrap management and circular economy growth.",
+        icon: "🌍",
+      },
+      {
+        title: "Our Values",
+        text: "Transparency, sustainability, operational excellence, and community empowerment.",
+        icon: "⭐",
+      },
+    ].map((item, i) => (
+
+      <motion.div
+        key={i}
+        className="bg-white/80 backdrop-blur-md border border-green-100 p-10 rounded-2xl text-center space-y-4 shadow-lg hover:shadow-xl transition"
+        whileHover={{ y: -8 }}
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
       >
-        <div className="space-y-6 px-6">
-          <h2 className="text-4xl font-bold">
-            Join the Recycling Transformation
-          </h2>
 
-          <p className="text-gray-500 max-w-xl mx-auto">
-            Whether you're a household or vendor, become part of a growing
-            ecosystem dedicated to smarter waste management and sustainability.
-          </p>
-
-          <motion.button
-            onClick={() => navigate("/register")}
-            className="bg-green-500 text-white px-8 py-3 rounded-md font-semibold shadow-sm hover:bg-green-600"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Get Started →
-          </motion.button>
+        <div className="w-16 h-16 mx-auto rounded-full bg-[#E5C447]/20 flex items-center justify-center text-3xl">
+          {item.icon}
         </div>
-      </motion.section>
+
+        <h3 className="font-heading text-3xl text-gray-800">
+          {item.title}
+        </h3>
+
+        <p className="text-gray-600 text-sm">
+          {item.text}
+        </p>
+
+      </motion.div>
+
+    ))}
+
+  </div>
+
+</section>
+
+      {/* STATS */}
+<motion.section
+  className="relative py-32 bg-gradient-to-b from-white to-[#eef7f1]"
+  initial={{ opacity: 0 }}
+  whileInView={{ opacity: 1 }}
+  viewport={{ once: true }}
+>
+
+  <div className="max-w-3xl mx-auto text-center mb-16 px-6 space-y-4">
+
+  <span className="inline-block text-xs uppercase tracking-widest font-semibold text-green-700 border border-green-300 px-4 py-1 rounded-full">
+    Impact
+  </span>
+
+  <h2 className="font-heading text-5xl md:text-6xl text-gray-800">
+    Growing a
+    <span className="text-[#E5C447]"> Sustainable Future</span>
+  </h2>
+
+  <p className="text-gray-600 text-lg">
+    Our platform continues to expand its impact by connecting
+    communities, empowering vendors, and reducing waste.
+  </p>
+
+</div>
+
+  <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-4 gap-8">
+
+    {[
+      { value: 12000, suffix: "+", label: "Pickups Completed" },
+      { value: 850, suffix: "+", label: "Verified Vendors" },
+      { value: 95, suffix: "T", label: "Scrap Recycled" },
+      { value: 25, suffix: "+", label: "Cities Served" },
+    ].map((stat, i) => (
+
+      <motion.div
+        key={i}
+        className="bg-white border border-green-100 p-10 rounded-xl text-center shadow-md hover:shadow-xl transition"
+        whileHover={{ y: -6 }}
+      >
+
+        <h3 className="font-heading text-5xl text-green-700">
+          <CountUp target={stat.value} suffix={stat.suffix} />
+        </h3>
+
+        <p className="text-gray-600 mt-3 text-sm">
+          {stat.label}
+        </p>
+
+      </motion.div>
+
+    ))}
+
+  </div>
+
+</motion.section>
+
+
+      {/* CTA */}
+<motion.section
+  className="relative py-32 bg-gradient-to-b from-[#eef7f1] to-white text-center overflow-hidden"
+  initial={{ opacity: 0, y: 40 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true }}
+>
+
+  <div className="absolute left-1/3 top-10 w-[500px] h-[500px] bg-green-200/40 blur-3xl rounded-full"></div>
+  
+
+  <div className="relative space-y-6 px-6 max-w-2xl mx-auto">
+
+    <span className="text-xs uppercase tracking-widest font-semibold text-green-700 border border-green-300 px-4 py-1 rounded-full">
+      Get Started
+    </span>
+
+    <h2 className="font-heading text-5xl md:text-6xl text-gray-800">
+      Join the Recycling
+      <br />
+      <span className="text-[#E5C447]">Transformation</span>
+    </h2>
+
+    <p className="text-gray-600">
+      Whether you're a household or vendor, become part of a growing
+      ecosystem dedicated to smarter waste management and sustainability.
+    </p>
+
+    <motion.button
+      onClick={() => navigate("/register")}
+      className="bg-[#E5C447] text-gray-900 px-10 py-4 rounded-md font-semibold shadow-lg hover:bg-yellow-300 transition"
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+    >
+      Get Started →
+    </motion.button>
+
+  </div>
+
+</motion.section>
 
       <Footer />
+
     </div>
   );
 }

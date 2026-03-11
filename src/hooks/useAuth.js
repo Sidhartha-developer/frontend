@@ -46,9 +46,9 @@ const useAuth = () => {
   const registerVendor = async (formData) => {
     dispatch(setLoading());
     try {
-      await registerVendorApi(formData);
+      const res = await registerVendorApi(formData);
       dispatch(clearError());
-      return { success: true };
+      return { success: true, data: res.data, message: res.message };
     } catch (err) {
       const msg = err.response?.data?.message || "Vendor registration failed.";
       dispatch(setError(msg));

@@ -32,6 +32,9 @@ const BecomeVendorPage = () => {
   const [plans, setPlans] = useState([]);
   const [selectedPlanId, setSelectedPlanId] = useState("");
   const [plansLoading, setPlansLoading] = useState(true);
+  const [vehicleTypes, setVehicleTypes] = useState([]);
+  const [scrapTypes, setScrapTypes] = useState([]);
+  const [idPreview, setIdPreview] = useState("");
 
   const selectedPlan = plans.find((plan) => plan._id === selectedPlanId) || plans[0] || null;
 
@@ -74,6 +77,16 @@ const BecomeVendorPage = () => {
       setError("Please select a subscription plan");
       return;
     }
+
+    if (!vehicleTypes.length) {
+  setError("Select at least one vehicle type");
+  return;
+}
+
+if (!scrapTypes.length) {
+  setError("Select at least one scrap type");
+  return;
+}
 
     if (!window.Razorpay) {
       setError("Razorpay checkout is unavailable right now. Please refresh and try again.");
@@ -129,7 +142,8 @@ const BecomeVendorPage = () => {
                 fd.append(key, value);
               }
             });
-
+            vehicleTypes.forEach(v => fd.append("vehicleTypes", v));
+scrapTypes.forEach(s => fd.append("scrapTypes", s));
             fd.append("idProof", idProof);
             fd.append("planId", selectedPlanId);
             fd.append("subscriptionId", verifyData.data?.subscription?.id);
@@ -343,17 +357,107 @@ const BecomeVendorPage = () => {
               </div>
 
               <div>
+  <label className="mb-2 block text-sm font-medium text-gray-700">
+    Vehicle Types <span className="text-red-500">*</span>
+  </label>
+
+  <div className="grid grid-cols-3 gap-3">
+    {[
+      { label: "2W", value: "2_wheeler", icon: "🛵" },
+      { label: "3W", value: "3_wheeler", icon: "🛺" },
+      { label: "4W", value: "4_wheeler", icon: "🚚" },
+    ].map((item) => {
+      const selected = vehicleTypes.includes(item.value);
+
+      return (
+        <div
+          key={item.value}
+          onClick={() => {
+            if (selected) {
+              setVehicleTypes(vehicleTypes.filter(v => v !== item.value));
+            } else {
+              setVehicleTypes([...vehicleTypes, item.value]);
+            }
+          }}
+          className={`cursor-pointer border rounded-lg p-3 text-center ${
+            selected
+              ? "border-primary bg-primary/10"
+              : "border-gray-300"
+          }`}
+        >
+          <div>{item.icon}</div>
+          <div className="text-xs">{item.label}</div>
+        </div>
+      );
+    })}
+  </div>
+</div>
+
+<div>
+  <label className="mb-2 block text-sm font-medium text-gray-700">
+    Scrap Types <span className="text-red-500">*</span>
+  </label>
+
+  <div className="grid grid-cols-2 gap-3">
+    {[
+      { label: "Household", value: "household", icon: "🏠" },
+      { label: "Shop", value: "shop", icon: "🏪" },
+      { label: "Small Ind", value: "small_industry", icon: "🏭" },
+      { label: "Large Ind", value: "large_industry", icon: "🏢" },
+    ].map((item) => {
+      const selected = scrapTypes.includes(item.value);
+
+      return (
+        <div
+          key={item.value}
+          onClick={() => {
+            if (selected) {
+              setScrapTypes(scrapTypes.filter(s => s !== item.value));
+            } else {
+              setScrapTypes([...scrapTypes, item.value]);
+            }
+          }}
+          className={`cursor-pointer border rounded-lg p-3 flex items-center gap-2 ${
+            selected
+              ? "border-primary bg-primary/10"
+              : "border-gray-300"
+          }`}
+        >
+          <span>{item.icon}</span>
+          <span className="text-sm">{item.label}</span>
+        </div>
+      );
+    })}
+  </div>
+</div>
+
+              <div>
                 <label className="mb-1 block text-sm font-medium text-gray-700">ID Proof</label>
                 <input
                   type="file"
                   accept="image/jpeg,image/png,image/jpg,image/webp"
                   onChange={(event) => {
-                    setIdProof(event.target.files?.[0] || null);
+                    const file = event.target.files?.[0];
+                    if (file) {
+                      setIdProof(file);
+                      setIdPreview(URL.createObjectURL(file));
+                    }
                     setError("");
                   }}
                   className="w-full text-sm text-gray-500 file:mr-3 file:rounded-lg file:border-0 file:bg-primary file:px-4 file:py-2 file:text-white"
                 />
               </div>
+              {idPreview && (
+  <div className="mt-3">
+    <p className="text-xs text-gray-500 mb-1">Preview:</p>
+
+    <img
+      src={idPreview}
+      alt="ID Preview"
+      className="w-32 h-20 object-cover rounded-lg border"
+    />
+  </div>
+)}
 
               <Button
                 type="submit"

@@ -35,6 +35,7 @@ import UsersManagement      from "./pages/admin/UsersManagement";
 import VendorsManagement    from "./pages/admin/VendorsManagement";
 import CategoriesManagement from "./pages/admin/CategoriesManagement";
 import RequestsManagement   from "./pages/admin/RequestsManagement";
+import AdminPricing         from "./pages/admin/AdminPricing";
 
 // reads role from redux — no separate file needed
 const Guard = ({ children, role }) => {
@@ -80,6 +81,7 @@ const App = () => (
     <Route path="/admin/vendors"     element={<Guard role="admin"><VendorsManagement /></Guard>} />
     <Route path="/admin/categories"  element={<Guard role="admin"><CategoriesManagement /></Guard>} />
     <Route path="/admin/requests"    element={<Guard role="admin"><RequestsManagement /></Guard>} />
+    <Route path="/admin/pricing"     element={<Guard role="admin"><AdminPricing /></Guard>}/>
 
     <Route path="*" element={<Navigate to="/" replace />} />
   </Routes>

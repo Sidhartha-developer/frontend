@@ -16,7 +16,7 @@ const links = [
   },
   {
     to: "/user/create-request",
-    label: "New Request",
+    label: "Sell your Scrap",
     icon: (
       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8}

@@ -5,6 +5,7 @@ import Button                  from "../../components/ui/Button";
 import Loader                  from "../../components/ui/Loader";
 import { getAllCategoriesApi }  from "../../api/category.api";
 import { createRequestApi }    from "../../api/request.api";
+import instance from "../../api/axiosInstance";
 
 const CreateRequest = () => {
   const navigate = useNavigate();
@@ -14,9 +15,10 @@ const CreateRequest = () => {
   const [images,     setImages]     = useState([]);
   const [loading,    setLoading]    = useState(false);
   const [errors,     setErrors]     = useState({});
+  const [categoryIds, setCategoryIds] = useState([]);
+  const [priceMap, setPriceMap] = useState({});
 
   const [form, setForm] = useState({
-    categoryId:      "",
     pickupAddress:   "",
     description:     "",
     preferredDate:   "",
@@ -24,6 +26,49 @@ const CreateRequest = () => {
     lat:             "",
     lng:             "",
   });
+
+
+  useEffect(() => {
+  fetchPrices();
+}, []);
+
+const fetchPrices = async () => {
+  try {
+    const res = await instance.get("/prices");
+
+    const list =
+      res.data?.data?.prices ||
+      res.data?.prices ||
+      [];
+
+    const map = {};
+    list.forEach((p) => {
+      if (p.categoryId?._id) {
+        map[p.categoryId._id] = p.pricePerKg;
+      }
+    });
+
+    setPriceMap(map);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const calculateTotal = () => {
+  if (!categoryIds.length || !form.estimatedWeight) return 0;
+
+  const weight = Number(form.estimatedWeight);
+
+  let total = 0;
+
+  categoryIds.forEach((id) => {
+    const price = priceMap[id] ?? 10;
+    total += price * (weight / categoryIds.length);
+  });
+
+  return Math.round(total);
+};
+
 
   useEffect(() => {
     getAllCategoriesApi()
@@ -42,8 +87,12 @@ const CreateRequest = () => {
     const err = {};
 
     // category
-    if (!form.categoryId)
-      err.categoryId = "Please select a category";
+    if (!categoryIds.length)
+      err.categoryIds = "Please select at least one category";
+
+    // scrap type
+    if (!form.scrapType)
+      err.scrapType = "Please select scrap type";
 
     // pickup address
     if (!form.pickupAddress.trim())
@@ -79,6 +128,7 @@ const CreateRequest = () => {
 
     const fd = new FormData();
     Object.entries(form).forEach(([k, v]) => { if (v) fd.append(k, v); });
+    categoryIds.forEach((id) => { fd.append("categoryIds", id);});
     images.forEach((img) => fd.append("images", img));
 
     setLoading(true);
@@ -111,6 +161,16 @@ const CreateRequest = () => {
 
   if (catLoading) return <UserLayout><Loader /></UserLayout>;
 
+  const getVehicleType = (weight) => {
+  const w = Number(weight);
+
+  if (!w) return "";
+
+  if (w < 100) return "2 Wheeler";
+  if (w <= 700) return "3 Wheeler";
+  return "4 Wheeler";
+};
+
   return (
     <UserLayout>
       <h1 className="text-xl font-bold text-gray-800 mb-6">Create Scrap Request</h1>
@@ -135,23 +195,85 @@ const CreateRequest = () => {
         <form onSubmit={handleSubmit} className="space-y-5">
 
           {/* category */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Category <span className="text-red-500">*</span>
-            </label>
-            <select
-              name="categoryId"
-              value={form.categoryId}
-              onChange={handleChange}
-              className={fieldClass("categoryId")}
-            >
-              <option value="">Select a category</option>
-              {categories.map((c) => (
-                <option key={c._id} value={c._id}>{c.name}</option>
-              ))}
-            </select>
-            <FieldError name="categoryId" />
-          </div>
+<div>
+  <label className="block text-sm font-medium text-gray-700 mb-2">
+    Categories <span className="text-red-500">*</span>
+  </label>
+
+  <div className="grid grid-cols-2 gap-3">
+    {categories.map((c) => {
+      const isSelected = categoryIds.includes(c._id);
+
+      return (
+        <div
+          key={c._id}
+onClick={() => {
+  setCategoryIds((prev) =>
+    prev.includes(c._id)
+      ? prev.filter((id) => id !== c._id)
+      : [...prev, c._id]
+  );
+}}
+          className={`cursor-pointer border rounded-lg p-3 flex items-center gap-2 transition ${
+            isSelected
+              ? "border-primary bg-primary/10"
+              : "border-gray-300 hover:border-primary"
+          }`}
+        >
+          {/* Optional icon */}
+          {c.iconUrl && (
+            <img src={c.iconUrl} className="w-5 h-5 object-contain" />
+          )}
+
+          <div className="flex flex-col">
+  <span className="text-sm">{c.name}</span>
+  <span className="text-xs text-gray-500">
+    ₹{priceMap[c._id] ?? 10}/kg
+  </span>
+</div>
+        </div>
+      );
+    })}
+  </div>
+
+  {errors.categoryIds && (
+    <p className="text-xs text-red-500 mt-1">{errors.categoryIds}</p>
+  )}
+</div>
+
+<div>
+  <label className="block text-sm font-medium text-gray-700 mb-2">
+    Scrap Type <span className="text-red-500">*</span>
+  </label>
+
+  <div className="grid grid-cols-2 gap-3">
+    {[
+      { label: "Household", value: "household", icon: "🏠" },
+      { label: "Shop", value: "shop", icon: "🏪" },
+      { label: "Small Industry", value: "small_industry", icon: "🏭" },
+      { label: "Large Industry", value: "large_industry", icon: "🏢" },
+    ].map((item) => (
+      <div
+        key={item.value}
+        onClick={() =>
+          setForm((p) => ({ ...p, scrapType: item.value }))
+        }
+        className={`cursor-pointer border rounded-lg p-3 flex items-center gap-2 transition ${
+          form.scrapType === item.value
+            ? "border-primary bg-primary/10"
+            : "border-gray-300 hover:border-primary"
+        }`}
+      >
+        <span>{item.icon}</span>
+        <span className="text-sm">{item.label}</span>
+      </div>
+    ))}
+  </div>
+
+  {errors.scrapType && (
+    <p className="text-xs text-red-500 mt-1">{errors.scrapType}</p>
+  )}
+</div>
 
           {/* pickup address */}
           <div>
@@ -213,7 +335,24 @@ const CreateRequest = () => {
               />
               <FieldError name="estimatedWeight" />
             </div>
+
           </div>
+
+          {form.estimatedWeight && (
+  <div className="mt-2 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">
+    🚚 {getVehicleType(form.estimatedWeight)} Recommended
+  </div>
+)}
+
+{form.estimatedWeight && categoryIds.length > 0 && (
+  <div className="mt-3 p-4 bg-green-50 border rounded-xl">
+    <p className="text-sm text-gray-600">You will earn</p>
+
+    <p className="text-xl font-bold text-green-600">
+      ₹{calculateTotal()}
+    </p>
+  </div>
+)}
 
           {/* lat + lng */}
           <div className="grid grid-cols-2 gap-4">
@@ -248,31 +387,58 @@ const CreateRequest = () => {
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Images <span className="text-gray-400 font-normal">(max 5 · JPG, PNG, WEBP · max 5MB each)</span>
             </label>
-            <input
-              type="file"
-              accept="image/jpeg,image/png,image/jpg,image/webp"
-              multiple
-              onChange={(e) => {
-                const files = Array.from(e.target.files);
-                if (files.length > 5) {
-                  setErrors((p) => ({ ...p, images: "Maximum 5 images allowed" }));
-                  return;
-                }
-                const oversized = files.some((f) => f.size > 5 * 1024 * 1024);
-                if (oversized) {
-                  setErrors((p) => ({ ...p, images: "Each image must be smaller than 5MB" }));
-                  return;
-                }
-                setImages(files);
-                setErrors((p) => ({ ...p, images: "" }));
-              }}
-              className="w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-primary file:text-white file:text-sm"
-            />
+<input
+  type="file"
+  accept="image/*"
+  // capture="environment"
+  multiple
+  onChange={(e) => {
+    const files = Array.from(e.target.files);
+    if (files.length > 5) {
+      setErrors((p) => ({ ...p, images: "Maximum 5 images allowed" }));
+      return;
+    }
+    const oversized = files.some((f) => f.size > 5 * 1024 * 1024);
+    if (oversized) {
+      setErrors((p) => ({ ...p, images: "Each image must be smaller than 5MB" }));
+      return;
+    }
+    setImages(files);
+    setErrors((p) => ({ ...p, images: "" }));
+  }}
+  className="w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-primary file:text-white file:text-sm"
+/>
             <FieldError name="images" />
             {images.length > 0 && (
               <p className="text-xs text-gray-400 mt-1">{images.length} file{images.length > 1 ? "s" : ""} selected</p>
             )}
           </div>
+
+          <div className="flex flex-wrap gap-3 mt-3">
+  {images.map((img, i) => (
+    <div key={i} className="relative">
+      
+      {/* Image */}
+      <img
+        src={URL.createObjectURL(img)}
+        className="w-20 h-20 object-cover rounded-lg border"
+      />
+
+      {/* Remove button */}
+      <button
+        type="button"
+        onClick={() => {
+          const updated = images.filter((_, index) => index !== i);
+          setImages(updated);
+        }}
+        className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center"
+      >
+        ✕
+      </button>
+
+    </div>
+  ))}
+</div>
 
           <Button type="submit" loading={loading} className="w-full justify-center">
             Submit Request

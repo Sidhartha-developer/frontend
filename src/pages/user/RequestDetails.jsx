@@ -23,7 +23,10 @@ const RequestDetails = () => {
   useEffect(() => {
     getRequestByIdApi(id)
       .then((res) => setRequest(res.data.request))
-      .catch(() => setError("Failed to load request"))
+      .catch((err) => {
+  console.log("ERROR:", err.response?.data || err);
+  setError(err.response?.data?.message || "Failed to load request");
+})
       .finally(() => setLoading(false));
   }, [id]);
 
@@ -60,10 +63,20 @@ const RequestDetails = () => {
       <div className="grid md:grid-cols-3 gap-6">
         <div className="md:col-span-2 space-y-5">
           <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="font-semibold text-gray-800">{request.categoryId?.name}</h2>
-              <Badge status={request.status} />
-            </div>
+<div className="flex items-center justify-between mb-4">
+  <div className="flex flex-wrap gap-2">
+    {request.categoryIds?.map((c) => (
+      <span
+        key={c._id}
+        className="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full"
+      >
+        {c.name}
+      </span>
+    ))}
+  </div>
+
+  <Badge status={request.status} />
+</div>
             <div className="grid grid-cols-2 gap-3 text-sm">
               <div>
                 <p className="text-gray-400 text-xs">Pickup Address</p>
@@ -93,6 +106,23 @@ const RequestDetails = () => {
               </div>
             )}
           </div>
+          {request.scrapType && (
+  <div>
+    <p className="text-gray-400 text-xs">Scrap Type</p>
+    <p className="text-gray-700 mt-0.5 capitalize">
+      {request.scrapType.replace("_", " ")}
+    </p>
+  </div>
+)}
+
+{request.vehicleType && (
+  <div>
+    <p className="text-gray-400 text-xs">Vehicle</p>
+    <p className="text-gray-700 mt-0.5">
+      🚚 {request.vehicleType.replace("_", " ")}
+    </p>
+  </div>
+)}
 
           {request.images?.length > 0 && (
             <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
